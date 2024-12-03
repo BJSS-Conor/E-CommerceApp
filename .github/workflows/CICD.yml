@@ -62,4 +62,4 @@ jobs:
           name: user-service-ut-build-artifacts
           path: ./downloaded-artifacts
     - name: Test
-      run: dotnet test ./downloaded-artifacts/UserMicroService.UnitTests.dll --no-build --verbosity normal --max-parallel 4
+      run: dotnet test ./downloaded-artifacts/UserMicroService.UnitTests.dll --no-build --verbosity normal
