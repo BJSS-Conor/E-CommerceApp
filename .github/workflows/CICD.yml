@@ -40,5 +40,6 @@ jobs:
       uses: actions/download-artifact@v3
       with:
           name: build-artifacts
+          path: ./downloaded-artifacts
     - name: Test
-      run: dotnet test ./UserMicroService.UnitTests/bin/Debug/net8.0/UserMicroService.UnitTests.dll --no-build --verbosity normal --max-parallel 4
+      run: dotnet test ./downloaded-artifacts/UserMicroService.UnitTests/bin/Debug/net8.0/UserMicroService.UnitTests.dll --no-build --verbosity normal --max-parallel 4
