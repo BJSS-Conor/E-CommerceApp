@@ -29,17 +29,17 @@ jobs:
       with:
         name: app-build-artifacts
         path:
-          ./home/runner/work/E-CommerceApp/E-CommerceApp/E-CommerceApp/bin/Debug/net8.0/E-CommerceApp.dll
+          /home/runner/work/E-CommerceApp/E-CommerceApp/E-CommerceApp/bin/Debug/net8.0/E-CommerceApp.dll
     - name: Upload User Service build artifacts
       uses: actions/upload-artifact@v3
       with: 
         name: user-service-build-artifacts
-        path: ./home/runner/work/E-CommerceApp/E-CommerceApp/UserMicroService/bin/Debug/net8.0/UserMicroService.dll
+        path: /home/runner/work/E-CommerceApp/E-CommerceApp/UserMicroService/bin/Debug/net8.0/UserMicroService.dll
     - name: Upload User Service Unit Tests build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: user-service-ut-build-artifacts
-        path: ./home/runner/work/E-CommerceApp/E-CommerceApp/UserMicroService.UnitTests/bin/Debug/net8.0/UserMicroService.UnitTests.dll
+        path: /home/runner/work/E-CommerceApp/E-CommerceApp/UserMicroService.UnitTests/bin/Debug/net8.0/UserMicroService.UnitTests.dll
 
   test:
     runs-on: ubuntu-latest
