@@ -29,7 +29,7 @@ jobs:
       with:
         name: build-artifacts
         path: |
-          ./bin/Debug/net8.0/UserMicroService.UnitTests.dll
+          ./build-artifacts
 
   test:
     runs-on: ubuntu-latest
