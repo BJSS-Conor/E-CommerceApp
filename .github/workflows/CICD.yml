@@ -23,23 +23,43 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
-    - name: Upload build artifacts
+      run: dotnet build --no-restore    
+    - name: Upload E-Commerce App build artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: build-artifacts
-        path: |
-          ./build-artifacts
+        name: app-build-artifacts
+        path:
+          ./home/runner/work/E-CommerceApp/E-CommerceApp/E-CommerceApp/bin/Debug/net8.0/E-CommerceApp.dll
+    - name: Upload User Service build artifacts
+      uses: actions/upload-artifact@v3
+      with: 
+        name: user-service-build-artifacts
+        path: ./home/runner/work/E-CommerceApp/E-CommerceApp/UserMicroService/bin/Debug/net8.0/UserMicroService.dll
+    - name: Upload User Service Unit Tests build artifacts
+      uses: actions/upload-artifacts@v3
+      with:
+        name: user-service-ut-build-artifacts
+        path: ./home/runner/work/E-CommerceApp/E-CommerceApp/UserMicroService.UnitTests/bin/Debug/net8.0/UserMicroService.UnitTests.dll
 
   test:
     runs-on: ubuntu-latest
     needs: build
     steps:
     - uses: actions/checkout@v4
-    - name: Download build artifacts
+    - name: Download E-Commerce App build artifacts
       uses: actions/download-artifact@v3
       with:
-          name: build-artifacts
+          name: app-build-artifacts
+          path: ./downloaded-artifacts
+    - name: Download User Service build artifacts
+      uses: actions/download-artifact@v3
+      with:
+          name: user-service-build-artifacts
+          path: ./downloaded-artifacts 
+    - name: Download User Service Unit Tests build artifacts
+      uses: actions/download-artifact@v3
+      with:
+          name: user-service-ut-build-artifacts
           path: ./downloaded-artifacts
     - name: Test
-      run: dotnet test ./downloaded-artifacts/UserMicroService.UnitTests/bin/Debug/net8.0/UserMicroService.UnitTests.dll --no-build --verbosity normal --max-parallel 4
+      run: dotnet test ./downloaded-artifacts/UserMicroService.UnitTests.dll --no-build --verbosity normal --max-parallel 4
