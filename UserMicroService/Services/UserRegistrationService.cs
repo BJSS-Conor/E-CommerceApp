@@ -8,7 +8,7 @@ namespace UserMicroService.Services
 {
     public class UserRegistrationService : IUserRegistrationService
     {
-        public UserDbContext _context;
+        private UserDbContext _context;
 
         public UserRegistrationService(UserDbContext context)
         {
