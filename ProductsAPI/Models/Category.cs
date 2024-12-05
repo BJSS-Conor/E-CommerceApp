@@ -1,4 +1,4 @@
-﻿namespace UserMicroService.Models
+﻿namespace ProductsAPI.Models
 {
     public class Category
     {
