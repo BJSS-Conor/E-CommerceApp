@@ -61,7 +61,7 @@ namespace ProductsAPI.UnitTest.Services
             var res = await _categoryService.GetCategoryById(categoryId);
 
             Assert.That(res.Success, Is.True);
-            Assert.That(res.Category, Is.EqualTo(expectedCategory));
+            Assert.That(res.Category, Is.EqualTo(expectedCategory));            
             Assert.That(res.Error, Is.Null);
         }
 
@@ -81,36 +81,34 @@ namespace ProductsAPI.UnitTest.Services
         [Test]
         public async Task CreateCategory_Test()
         {
-            var category = new Category("TestCategory");
-            var req = new CreateCategoryRequest(category);
+            var category = new Category("TestCategory");            
 
-            var res = await _categoryService.CreateCategory(req);
+            var res = await _categoryService.CreateCategory(category);
 
-            Assert.That(res.Success, Is.True);
-            Assert.That(res.Category, Is.EqualTo(category));            
+            Assert.That(res.Name, Is.EqualTo(category.Name));                       
         }
 
         [Test]
         public async Task UpdateCategory_ValidCategory()
         {
-            var category = new Category(3, "Updated Category");
-            var req = new UpdateCategoryRequest(3, category);
+            var updatedCategory = new Category(3, "Updated Category");            
 
-            var res = await _categoryService.UpdateCategory(req);
+            var res = await _categoryService.UpdateCategory(3, updatedCategory);
+            var category = await _categoryService.GetCategoryById(3);
 
             Assert.That(res.Success, Is.True);
-            Assert.That(res.UpdatedCategory, Is.EqualTo(category));
-            Assert.That(res.Error, Is.False);
+            Assert.That(res.UpdatedCategory, Is.EqualTo(updatedCategory));
+            Assert.That(res.Error, Is.Null);
+            Assert.That(category.Category, Is.EqualTo(updatedCategory));
         }
 
         [Test]
         public async Task UpdateCategory_InvalidCategory()
         {
-            var category = new Category(10, "Updated Category");
-            var req = new UpdateCategoryRequest(10, category);
-            var expectedError = $"Category with ID {category.Id} does not exist";
+            var updatedCategory = new Category(10, "Updated Category");            
+            var expectedError = $"Category with ID {updatedCategory.Id} does not exist";
 
-            var res = await _categoryService.UpdateCategory(req);
+            var res = await _categoryService.UpdateCategory(10, updatedCategory);
 
             Assert.That(res.Success, Is.False);
             Assert.That(res.UpdatedCategory, Is.Null);
@@ -130,6 +128,7 @@ namespace ProductsAPI.UnitTest.Services
             var res = await _categoryService.DeleteCategory(categoryId);
 
             Assert.That(res.Success, Is.True);
+            Assert.That(res.Error, Is.Null);
         }
 
         [Test]
@@ -141,10 +140,12 @@ namespace ProductsAPI.UnitTest.Services
                 new Category(1, "Category 1"),
                 new Category(3, "Category 3"),
             };
+            var expectedError = $"Unable to delete category wiht ID {categoryId}";
 
             var res = await _categoryService.DeleteCategory(categoryId);
 
             Assert.That(res.Success, Is.False);
+            Assert.That(res.Error, Is.EqualTo(expectedError));
         }
 
         [TearDown]

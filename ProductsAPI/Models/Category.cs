@@ -15,5 +15,12 @@
         {            
             Name = name;
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Category category &&
+                   Id == category.Id &&
+                   Name == category.Name;
+        }
     }
 }
