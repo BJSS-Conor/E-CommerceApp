@@ -100,7 +100,7 @@ namespace ProductsAPI.UnitTest.Services
 
             var res = await _productCatalogueService.GetProductsByCategory(categoryId);
 
-            Assert.That(res.Success, Is.True);
+            Assert.That(res.Success, Is.False);
             Assert.That(res.Products, Is.Null);
             Assert.That(res.Error, Is.EqualTo(expectedError));
         }
@@ -122,10 +122,12 @@ namespace ProductsAPI.UnitTest.Services
             var updatedProduct = new Product(productId, "Updated Name", "Updated Description", 5, 2, 5);
 
             var res = await _productCatalogueService.UpdateProduct(productId, updatedProduct);
+            var getProductRes = await _productCatalogueService.GetProductById(productId);
 
             Assert.That(res.Success, Is.True);
             Assert.That(res.Product, Is.EqualTo(updatedProduct));
             Assert.That(res.Error, Is.Null);
+            Assert.That(getProductRes.Product, Is.EqualTo(updatedProduct));
         }        
 
         [TestCase(0)]

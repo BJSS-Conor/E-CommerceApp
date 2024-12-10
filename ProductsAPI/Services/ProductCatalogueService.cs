@@ -1,4 +1,5 @@
-﻿using ProductsAPI.Contracts.Requests;
+﻿using Microsoft.EntityFrameworkCore;
+using ProductsAPI.Contracts.Requests;
 using ProductsAPI.Contracts.Responses.Products;
 using ProductsAPI.Models;
 
@@ -11,56 +12,100 @@ namespace ProductsAPI.Services
         public ProductCatalogueService(ProductCatalogueDbContext context)
         {
             _context = context;
+        }        
+
+        public async Task<List<Product>> GetAllProducts()
+        {
+            var products = await _context.Products.ToListAsync();
+
+            return products;
         }
 
-        public Task DeleteProduct(int id)
+        public async Task<GetProductResponse> GetProductById(int id)
         {
-            throw new NotImplementedException();
+            var product = await _context.Products.SingleOrDefaultAsync(p => p.Id == id);
+
+            GetProductResponse res;
+            if(product == null)
+            {
+                res = new GetProductResponse(false, null, $"Product with ID {id} does not exist");
+            }
+            else
+            {
+                res = new GetProductResponse(true, product, null);
+            }
+
+            return res;
         }
 
-        public Task<List<Product>> GetAllProducts()
+        public async Task<GetProductsResponse> GetProductsByCategory(int categoryId)
         {
-            throw new NotImplementedException();
+            var products = await _context.Products.Where(p => p.CategoryId == categoryId).ToListAsync();
+
+            GetProductsResponse res;
+            if(products.Count == 0)
+            {
+                res = new GetProductsResponse(false, null, $"Category with ID {categoryId} does not exist");
+            }
+            else
+            {
+                res = new GetProductsResponse(true, products, null);
+            }
+
+            return res;
         }
 
-        public Task<Product> GetProductById(int id)
+        public async Task<Product> CreateProduct(Product product)
         {
-            throw new NotImplementedException();
+            await _context.Products.AddAsync(product);
+
+            return product;
         }
 
-        public Task ReduceStock(int reduction)
+        public async Task<UpdateProductResponse> UpdateProduct(int id, Product updatedProduct)
         {
-            throw new NotImplementedException();
-        }
+            var product = await _context.Products.SingleOrDefaultAsync(p => p.Id == updatedProduct.Id);
 
-        public Task<Product> UpdateProduct(UpdateProductRequest req)
-        {
-            throw new NotImplementedException();
-        }
+            UpdateProductResponse res;
+            if(product == null)
+            {
+                res = new UpdateProductResponse(false, null, $"Product with ID {updatedProduct.Id} does not exist");
+            }
+            else
+            {                
+                product.Name = updatedProduct.Name;
+                product.Description = updatedProduct.Description;
+                product.CategoryId = updatedProduct.CategoryId;
+                product.Price = updatedProduct.Price;
+                product.Stock = updatedProduct.Stock;
 
-        Task<Product> IProductCatalogueService.CreateProduct(Product product)
-        {
-            throw new NotImplementedException();
-        }
+                _context.Entry(product).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
 
-        Task<DeleteProductResponse> IProductCatalogueService.DeleteProduct(int id)
-        {
-            throw new NotImplementedException();
-        }
+                res = new UpdateProductResponse(true, product, null);
+            }
 
-        Task<GetProductResponse> IProductCatalogueService.GetProductById(int id)
-        {
-            throw new NotImplementedException();
-        }
+            return res;
+        }        
 
-        Task<GetProductsResponse> IProductCatalogueService.GetProductsByCategory(int categoryId)
+        public async Task<DeleteProductResponse> DeleteProduct(int id)
         {
-            throw new NotImplementedException();
-        }
+            var product = _context.Products.FirstOrDefault(p => p.Id == id);
 
-        Task<UpdateProductResponse> IProductCatalogueService.UpdateProduct(int id, Product product)
-        {
-            throw new NotImplementedException();
-        }
+            DeleteProductResponse res;
+            if(product == null)
+            {
+                res = new DeleteProductResponse(false, $"Product with ID {id} does not exist");
+            }
+            else
+            {
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+
+                res = new DeleteProductResponse(true, null);
+            }
+
+            return res;
+        }        
     }
 }

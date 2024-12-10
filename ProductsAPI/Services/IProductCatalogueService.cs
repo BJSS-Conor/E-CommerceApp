@@ -11,7 +11,6 @@ namespace ProductsAPI.Services
         public Task<GetProductsResponse> GetProductsByCategory(int categoryId);
         public Task<Product> CreateProduct(Product product);
         public Task<UpdateProductResponse> UpdateProduct(int id, Product product); 
-        public Task<DeleteProductResponse> DeleteProduct(int id);
-        public Task ReduceStock(int reduction);
+        public Task<DeleteProductResponse> DeleteProduct(int id);        
     }
 }
