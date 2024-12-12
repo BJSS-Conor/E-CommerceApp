@@ -15,6 +15,8 @@ namespace ProductsAPI.Services
             _dbContext = dbContext;
         }
 
+        public CategoryService() { }
+
         public async Task<GetAllCategoriesResponse> GetAllCategories()
         {
             var categories = await _dbContext.Categories.ToListAsync();

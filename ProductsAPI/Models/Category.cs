@@ -14,7 +14,7 @@
         public Category(string name)
         {            
             Name = name;
-        }
+        }        
 
         public override bool Equals(object obj)
         {
