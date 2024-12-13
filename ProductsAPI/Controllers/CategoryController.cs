@@ -54,13 +54,11 @@ namespace ProductsAPI.Controllers
             }
         }
 
-        [HttpPut("{id, updatedName}")]
-        public async Task<ActionResult> UpdateCategory(int id, string updatedName)
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateCategory(int id, Category updatedCategory)
         {
-            if(!String.IsNullOrWhiteSpace(updatedName))
-            {
-                var updatedCategory = new Category(id, updatedName);
-
+            if(!String.IsNullOrWhiteSpace(updatedCategory.Name))
+            {                
                 var res = await _categoryService.UpdateCategory(id, updatedCategory);
 
                 if (res.Success)

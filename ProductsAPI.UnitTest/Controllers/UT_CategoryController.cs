@@ -87,17 +87,18 @@ namespace ProductsAPI.UnitTest.Controllers
             var id = 1;
             var updatedName = "Updated Name";
 
-            var expectedCategory = new Category(id, updatedName);
-            var expectedResCategory = new UpdateCategoryResponse(true, expectedCategory, null);
-            _mockCategoryService.Setup(service => service.UpdateCategory(id, expectedCategory)).ReturnsAsync(expectedResCategory);
+            var category = new Category(id, "Category");
+            var updatedCategory = new Category(id, updatedName);
+            var expectedResCategory = new UpdateCategoryResponse(true, updatedCategory, null);
+            _mockCategoryService.Setup(service => service.UpdateCategory(id, category)).ReturnsAsync(expectedResCategory);
 
             var expectedStatusCode = 200;
 
-            var result = await _categoryController.UpdateCategory(id, updatedName) as OkObjectResult;
+            var result = await _categoryController.UpdateCategory(id, category) as OkObjectResult;
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.StatusCode, Is.EqualTo(expectedStatusCode));
-            Assert.That(result.Value, Is.EqualTo(expectedCategory));
+            Assert.That(result.Value, Is.EqualTo(updatedCategory));
         }
 
         [Test]
@@ -113,7 +114,7 @@ namespace ProductsAPI.UnitTest.Controllers
 
             var expectedStatusCode = 404;
 
-            var result = await _categoryController.UpdateCategory(id, updatedName) as NotFoundObjectResult;
+            var result = await _categoryController.UpdateCategory(id, category) as NotFoundObjectResult;
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.StatusCode, Is.EqualTo(expectedStatusCode));
@@ -124,12 +125,13 @@ namespace ProductsAPI.UnitTest.Controllers
         public async Task UpdateCategory_InvalidName()
         {
             var id = 0;
-            var updatedName = "";            
+            var updatedName = "";
+            var category = new Category(id, updatedName);
 
             var expectedStatusCode = 400;
             var expectedError = "Failed to update category: Name cannot be empty";            
 
-            var result = await _categoryController.UpdateCategory(id, updatedName) as BadRequestObjectResult;
+            var result = await _categoryController.UpdateCategory(id, category) as BadRequestObjectResult;
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.StatusCode, Is.EqualTo(expectedStatusCode));
